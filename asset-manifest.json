@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/static/css/main.869201f8.chunk.css",
-    "main.js": "/static/js/main.77349386.chunk.js",
-    "main.js.map": "/static/js/main.77349386.chunk.js.map",
+    "main.js": "/static/js/main.d5a7f2ff.chunk.js",
+    "main.js.map": "/static/js/main.d5a7f2ff.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.c9df3155.js",
     "runtime-main.js.map": "/static/js/runtime-main.c9df3155.js.map",
     "static/css/2.350db883.chunk.css": "/static/css/2.350db883.chunk.css",
-    "static/js/2.5f9e3e5c.chunk.js": "/static/js/2.5f9e3e5c.chunk.js",
-    "static/js/2.5f9e3e5c.chunk.js.map": "/static/js/2.5f9e3e5c.chunk.js.map",
+    "static/js/2.822e7a07.chunk.js": "/static/js/2.822e7a07.chunk.js",
+    "static/js/2.822e7a07.chunk.js.map": "/static/js/2.822e7a07.chunk.js.map",
     "static/js/3.f499614c.chunk.js": "/static/js/3.f499614c.chunk.js",
     "static/js/3.f499614c.chunk.js.map": "/static/js/3.f499614c.chunk.js.map",
     "static/js/4.0bcd091a.chunk.js": "/static/js/4.0bcd091a.chunk.js",
@@ -17,19 +17,19 @@
     "static/js/6.8ea5b19e.chunk.js": "/static/js/6.8ea5b19e.chunk.js",
     "static/js/6.8ea5b19e.chunk.js.map": "/static/js/6.8ea5b19e.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.2c98245b385dcdcceb5dbb3a7daf185a.js": "/precache-manifest.2c98245b385dcdcceb5dbb3a7daf185a.js",
+    "precache-manifest.1abb47455ec7d408d1aad7eee0209bf2.js": "/precache-manifest.1abb47455ec7d408d1aad7eee0209bf2.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.350db883.chunk.css.map": "/static/css/2.350db883.chunk.css.map",
     "static/css/main.869201f8.chunk.css.map": "/static/css/main.869201f8.chunk.css.map",
-    "static/js/2.5f9e3e5c.chunk.js.LICENSE.txt": "/static/js/2.5f9e3e5c.chunk.js.LICENSE.txt",
+    "static/js/2.822e7a07.chunk.js.LICENSE.txt": "/static/js/2.822e7a07.chunk.js.LICENSE.txt",
     "static/js/5.2878cc09.chunk.js.LICENSE.txt": "/static/js/5.2878cc09.chunk.js.LICENSE.txt",
     "static/media/searchicon.svg": "/static/media/searchicon.b68a9429.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.c9df3155.js",
     "static/css/2.350db883.chunk.css",
-    "static/js/2.5f9e3e5c.chunk.js",
+    "static/js/2.822e7a07.chunk.js",
     "static/css/main.869201f8.chunk.css",
-    "static/js/main.77349386.chunk.js"
+    "static/js/main.d5a7f2ff.chunk.js"
   ]
 }
