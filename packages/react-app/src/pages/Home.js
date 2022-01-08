@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import config from "config";
@@ -13,6 +13,7 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
+import SpamBox from "segments/spam";
 import Feedbox from "segments/Feedbox";
 import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
@@ -33,8 +34,9 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
-export const ALLOWED_CORE_NETWORK = 1; //chainId of network which we have deployed the core contract on
-const CHANNEL_TAB = 0; //Default to 1 which is the channel tab
+
+export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
+const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
 
 // Create Header
 function Home() {
@@ -68,7 +70,7 @@ function Home() {
         <span style={{ color: "#e20880" }}> Invalid Network </span>
       ),
       notificationBody:
-        "Please connect to the Ethereum network to access channels",
+        "Please connect to the Kovan network to access channels",
     });
   };
   /**
@@ -241,12 +243,8 @@ function Home() {
     userClickedAt(INITIAL_OPEN_TAB);
     setChannelJson([]);
     // save push admin to global state
-    epnsReadProvider.pushChannelAdmin()
-    .then((response) => {
+    epnsReadProvider.pushChannelAdmin().then((response) => {
       dispatch(setPushAdmin(response));
-    })
-    .catch(err =>{
-      console.log({err})
     });
 
     // EPNS Read Provider Set
@@ -466,12 +464,27 @@ function Home() {
             Receive Notifs
           </ControlText>
         </ControlButton>
+
+        <ControlButton
+          index={4}
+          active={controlAt == 4 ? 1 : 0}
+          border="#e20880"
+          onClick={() => {
+            userClickedAt(4);
+          }}
+        >
+          <ControlImage src="./svg/feedbox.svg" active={controlAt == 3 ? 1 : 0} />
+          <ControlText active={controlAt == 3 ? 1 : 0}>
+            Spam Notifications
+          </ControlText>
+        </ControlButton>
       </Controls>
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
+        {controlAt == 4 && <SpamBox />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}

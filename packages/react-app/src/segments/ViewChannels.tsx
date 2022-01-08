@@ -1,3 +1,4 @@
+
 import React from "react";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
@@ -5,13 +6,14 @@ import { Waypoint } from "react-waypoint";
 import { useDispatch, useSelector } from "react-redux";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import searchIcon from "assets/searchicon.svg";
+import { envConfig } from "@project/contracts";
 
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
+
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
@@ -21,7 +23,9 @@ const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for th
 function ViewChannels() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
-  const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
+  const { channels, page, ZERO_ADDRESS } = useSelector(
+    (state: any) => state.channels
+  );
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
@@ -31,6 +35,7 @@ function ViewChannels() {
   const [trialCount, setTrialCount] = React.useState(0);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
+  const isMainnet = chainId == 1;
 
   // fetch channel data if we are just getting to this pae
   React.useEffect(() => {
@@ -50,7 +55,7 @@ function ViewChannels() {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(
+    const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
       channelsVisited,
       CHANNELS_PER_PAGE
     );
@@ -63,7 +68,7 @@ function ViewChannels() {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.instance.getChannelsMetaAsync(
+    const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
       startingPoint,
       CHANNELS_PER_PAGE
     );
@@ -125,7 +130,7 @@ function ViewChannels() {
       clearTimeout(timeout);
     };
   }, [search]);
-
+  
   return (
     <>
       <Container>
@@ -143,7 +148,8 @@ function ViewChannels() {
           >
             {!loading && (
               <Header style={{ minHeight: "140px" }}>
-                <InputWrapper>
+                  {/* if on mainnet then occupy full width*/}
+                <InputWrapper style={{width: isMainnet ? "100%" : "50%"}}>
                   <SearchBar
                     type="text"
                     value={search}
@@ -151,8 +157,10 @@ function ViewChannels() {
                     className="input"
                     placeholder="Search By Name/Address"
                   />
-                  <SearchIconImage src={searchIcon} alt="" />
+                  <SearchIconImage src='/searchicon.svg' alt="" />
                 </InputWrapper>
+                {!isMainnet && <Faucets />} 
+                {/* only display faucets on mainnet */}
               </Header>
             )}
 

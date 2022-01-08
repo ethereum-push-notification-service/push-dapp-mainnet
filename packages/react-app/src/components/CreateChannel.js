@@ -191,8 +191,6 @@ function CreateChannel() {
       address: address,
     });
 
-    console.log({input})
-
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
@@ -206,13 +204,6 @@ function CreateChannel() {
     var signer = library.getSigner(account);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
-    console.log('\n\n\n\n');
-    console.log({
-      daiContract,
-      da: addresses.dai,
-      fn: addresses.epnscore
-    });
-    console.log('\n\n\n\n');
 
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
@@ -231,13 +222,6 @@ function CreateChannel() {
       abis.epnscore,
       signer
     );
-    console.log('\n\n\n\n');
-    console.log({
-      contract,
-      ca: addresses.epnscore,
-      fn: contract.createChannelWithFees
-    });
-    console.log('\n\n\n\n');
 
     const channelType = 2; // Open Channel
     const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
@@ -365,7 +349,7 @@ function CreateChannel() {
                 accept="image/jpeg,image/png"
               />
             </Item>
-            {/* <Item align="flex-end">
+            <Item align="flex-end">
               <Minter
                 onClick={() => {
                   mintDai();
@@ -376,7 +360,7 @@ function CreateChannel() {
                   <PoolShare>Get Free DAI for Channel</PoolShare>
                 </Pool>
               </Minter>
-            </Item> */}
+            </Item>
           </Content>
         </Section>
       )}

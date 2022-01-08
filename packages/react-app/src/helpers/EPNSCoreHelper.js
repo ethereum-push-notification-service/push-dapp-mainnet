@@ -192,8 +192,7 @@ const EPNSCoreHelper = {
         })
         .catch(err => {
           console.log("!!!Error, getTotalNumberOfChannels() --> %o", err);
-          // reject(err);
-          resolve(0)
+          reject(err);
         });
     })
   },

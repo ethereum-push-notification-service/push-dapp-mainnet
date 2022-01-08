@@ -8,12 +8,14 @@ import Loader from "react-loader-spinner";
 import Skeleton from "@yisheng90/react-loading";
 import { IoMdPeople } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
+import { FaRegAddressCard } from "react-icons/fa";
+import { AiTwotoneCopy } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
 
+import { postReq } from "api";
 import NotificationToast from "components/NotificationToast";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { postReq } from "api";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
 // Create Header
@@ -27,7 +29,9 @@ function ViewChannelItem({ channelObjectProp }) {
     ZERO_ADDRESS,
   } = useSelector((state) => state.contracts);
   const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST } = useSelector((state) => state.channels);
+  const { channelsCache, CHANNEL_BLACKLIST } = useSelector(
+    (state) => state.channels
+  );
   const { account, library, chainId } = useWeb3React();
   const isOwner = channelObjectProp.addr === account;
 
@@ -44,6 +48,7 @@ function ViewChannelItem({ channelObjectProp }) {
   const [txInProgress, setTxInProgress] = React.useState(false);
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
+  const [copyText, setCopyText] = React.useState(null);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
@@ -90,7 +95,6 @@ function ViewChannelItem({ channelObjectProp }) {
       .catch((err) => {
         console.log(channelObject.verifiedBy, err);
       });
-  
   }, [isVerified, channelObject]);
 
   const EPNS_DOMAIN = {
@@ -100,8 +104,10 @@ function ViewChannelItem({ channelObjectProp }) {
   };
   // to fetch channels
   const fetchChannelJson = async () => {
+     
     try {
       let channelJson = {};
+      setCopyText(channelObject.addr)
       if (channelsCache[channelObject.addr]) {
         channelJson = channelsCache[channelObject.addr];
       } else {
@@ -115,9 +121,19 @@ function ViewChannelItem({ channelObjectProp }) {
           })
         );
       }
-      const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
-        channelObject.addr
-      );
+        const channelSubscribers = await postReq("/channels/get_subscribers", {
+          channel: channelObject.addr,
+          op: "read",
+        })
+          .then(({ data }) => {
+            const subs = data.subscribers;
+  
+            return subs
+          })
+          .catch((err) => {
+            console.log(`getChannelSubscribers => ${err.message}`);
+            return [];
+          });
       const subscribed = channelSubscribers.find((sub) => {
         return sub.toLowerCase() === account.toLowerCase();
       });
@@ -150,6 +166,9 @@ function ViewChannelItem({ channelObjectProp }) {
   // to subscribe
   const subscribe = async () => {
     subscribeAction(false);
+  };
+  const formatAddress = (addressText) => {
+    return addressText.length > 40 ? `${addressText.slice(0, 4)}....${addressText.slice(36)}` : addressText;
   };
 
   // Toastify
@@ -318,6 +337,20 @@ function ViewChannelItem({ channelObjectProp }) {
     }
   };
 
+  const copyToClipboard = (url) => {
+    // fallback for non navigator browser support
+    if (navigator && navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+    } else {
+        const el = document.createElement("textarea");
+        el.value = url;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+    }
+};
+  
   const unsubscribeAction = async () => {
     let txToast;
     try {
@@ -385,7 +418,7 @@ function ViewChannelItem({ channelObjectProp }) {
   };
 
   if (isBlocked) return <></>;
-  if(isChannelBlacklisted) return <></>;
+  if (isChannelBlacklisted) return <></>;
 
   // render
   return (
@@ -455,12 +488,34 @@ function ViewChannelItem({ channelObjectProp }) {
                 <IoMdPeople size={20} color="#ccc" />
                 <SubscribersCount>{memberCount}</SubscribersCount>
               </Subscribers>
+
+              <Subscribers
+                style={{ marginLeft: "10px" }}
+              >
+                <FaRegAddressCard size={20} color="#ccc" />
+                <SubscribersCount
+                  onClick={() => {
+                    copyToClipboard(channelJson.addr);
+                    setCopyText("copied");
+                  }}
+                  onMouseEnter={() => {
+                    setCopyText("click to copy");
+                  }}
+                  onMouseLeave={() => {
+                    setCopyText(channelJson.addr);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <AiTwotoneCopy />
+                  {formatAddress(copyText)}
+                </SubscribersCount>
+              </Subscribers>
               {verifierDetails && (
-                  <Subscribers>
-                    <VerifiedBy>Verified by:</VerifiedBy>
-                    <VerifierIcon src={verifierDetails.icon}/>
-                    <VerifierName>{verifierDetails.name}</VerifierName>
-                  </Subscribers>
+                <Subscribers>
+                  <VerifiedBy>Verified by:</VerifiedBy>
+                  <VerifierIcon src={verifierDetails.icon} />
+                  <VerifierName>{verifierDetails.name}</VerifierName>
+                </Subscribers>
               )}
             </>
           )}
@@ -685,9 +740,11 @@ const ChannelMetaBox = styled.label`
   margin: 0px 5px;
   color: #fff;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 5px 10px;
+  display: flex;
   border-radius: 10px;
   font-size: 11px;
+  gap: 3px;
 `;
 
 const Subscribers = styled.div`
@@ -699,6 +756,7 @@ const Subscribers = styled.div`
 
 const SubscribersCount = styled(ChannelMetaBox)`
   background: #35c4f3;
+  transition: 300ms;
 `;
 
 const Pool = styled.div`
@@ -804,12 +862,12 @@ const SkeletonButton = styled.div`
 
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
-  min-width:80px;
+  min-width: 80px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: #674c9f;
-  min-width:80px;
+  min-width: 80px;
 `;
 
 const OwnerButton = styled(ChannelActionButton)`

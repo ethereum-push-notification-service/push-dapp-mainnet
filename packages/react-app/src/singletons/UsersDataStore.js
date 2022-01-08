@@ -168,8 +168,7 @@ export default class UsersDataStore {
             })
             .catch(err => {
               console.log("!!!Error, getOwnerMetaAsync() --> %o", err);
-              // reject(err);
-              resolve({})
+              reject(err);
             });
         }
       });
@@ -225,9 +224,7 @@ export default class UsersDataStore {
             })
             .catch(err => {
               console.log("!!!Error, getUserMetaAsync() --> %o", err);
-              // reject(err);
-              console.log(err);
-              resolve({})
+              reject(err);
           });
         }
       });

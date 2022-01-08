@@ -1,8 +1,9 @@
 import axios from "axios";
+import { envConfig } from "@project/contracts";
+
 
 // const BASE_URL = "https://backend-staging.epns.io/apis";
-const BASE_URL = "https://backend-mainnet.epns.io/apis";
-// const BASE_URL = "https://backend-prod.epns.io/apis";
+const BASE_URL = envConfig.apiUrl// "https://backend-kovan.epns.io/apis";
 // const BASE_URL = "http://localhost:4000/apis"; //for local push node
 
 /**
