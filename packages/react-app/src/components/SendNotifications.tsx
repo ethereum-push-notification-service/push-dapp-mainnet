@@ -355,7 +355,7 @@ function SendNotifications() {
       
     const EPNS_DOMAIN = {
       name: 'EPNS COMM V1',
-      chainId: 42,
+      chainId: 1,
       verifyingContract: '0x87da9Af1899ad477C67FeA31ce89c1d2435c77DC',
     }
     
