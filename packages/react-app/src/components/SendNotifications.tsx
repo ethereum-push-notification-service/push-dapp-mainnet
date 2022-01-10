@@ -347,9 +347,6 @@ function SendNotifications() {
       }
 
       console.log("IPFS cid: %o", storagePointer);
-      toast.update(notificationToast, {
-        render: "IPFS HASH: " + storagePointer,
-      });
     }
     if (nfType === "1" || nfType === "2" || nfType === "3" || nfType === "4"){
       // Prepare Identity and send notification
