@@ -70,7 +70,7 @@ function Home() {
         <span style={{ color: "#e20880" }}> Invalid Network </span>
       ),
       notificationBody:
-        "Please connect to the Main network to access channels",
+        "Please connect to the Kovan network to access channels",
     });
   };
 
@@ -398,27 +398,12 @@ function Home() {
             Receive Notifs
           </ControlText>
         </ControlButton>
-
-        <ControlButton
-          index={4}
-          active={controlAt == 4 ? 1 : 0}
-          border="#e20880"
-          onClick={() => {
-            userClickedAt(4);
-          }}
-        >
-          <ControlImage src="./svg/feedbox.svg" active={controlAt == 4 ? 1 : 0} />
-          <ControlText active={controlAt == 4 ? 1 : 0}>
-            Spam Notifications
-          </ControlText>
-        </ControlButton>
       </Controls>
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
-        {controlAt == 4 && <SpamBox />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}
