@@ -29,7 +29,7 @@ const web3Connectors = {
     title: "Wallet Connect",
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
+  // Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
   Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
 };
 
